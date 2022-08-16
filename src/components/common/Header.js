@@ -23,8 +23,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingTop: statusBarHeight + hp(1),
     paddingBottom: hp(2),
-    borderBottomLeftRadius: wp(6),
-    borderBottomRightRadius: wp(6),
+    // borderBottomLeftRadius: wp(6),
+    // borderBottomRightRadius: wp(6),
   },
   headerText: {
     fontSize: fontSize(18),

@@ -7,11 +7,16 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  TextInput,
 } from "react-native";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import I18n from "react-native-i18n";
-import { useTheme, useIsFocused } from "@react-navigation/native";
+import {
+  useTheme,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { Header } from "../../components";
@@ -20,7 +25,7 @@ import { getText } from "../../helper/globalFunction";
 import { fontSize } from "../../helper/utils";
 import { homeCategoriesData } from "../../helper/dataConstants";
 import { getNewsDataAPI } from "../../actions/dataAction";
-import { useNavigation } from "@react-navigation/native";
+import { icons } from "../../helper/iconConstants";
 
 // create a component
 const Home = () => {
@@ -31,6 +36,9 @@ const Home = () => {
 
   const [categoriesData, setCategoriesData] = useState(homeCategoriesData);
   const { articlesData } = useSelector((state) => state.data);
+  const [isRefresh, setIsRefresh] = useState(false);
+  const [isSearchSelect, setIsSearchSelect] = useState(false);
+  const [serachText, setSerachText] = useState("");
 
   console.log("articlesData", articlesData);
 
@@ -56,8 +64,12 @@ const Home = () => {
       data: {
         text: concept,
       },
-      onSuccess: () => {},
-      onFail: () => {},
+      onSuccess: () => {
+        setIsRefresh(false);
+      },
+      onFail: () => {
+        setIsRefresh(false);
+      },
     };
     dispatch(getNewsDataAPI(request));
   };
@@ -118,12 +130,55 @@ const Home = () => {
       </TouchableOpacity>
     );
   };
+  const onRefresh = () => {
+    setIsRefresh(true);
+    getNewsData("All");
+  };
 
   return (
     <View style={style.container}>
       <Header title={getText("home")} />
       <View>
-        <Text style={style.titleText}>{getText("topStoriesForYou")}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            margin: wp(4),
+          }}
+        >
+          {isSearchSelect ? (
+            <View style={{ flex: 1, marginRight: wp(4) }}>
+              <TextInput
+                style={{
+                  borderWidth: 1,
+                  borderRadius: wp(2),
+                  fontSize: fontSize(18),
+                  paddingHorizontal: wp(2),
+                  height: hp(4),
+                }}
+                placeholder={"Search Article"}
+                // value={serachText}
+                // onChangeText={(text) => setSerachText(text)}
+              />
+            </View>
+          ) : (
+            <View>
+              <Text style={style.titleText}>{getText("topStoriesForYou")}</Text>
+            </View>
+          )}
+          <TouchableOpacity
+            onPress={() => {
+              setIsSearchSelect(!isSearchSelect);
+            }}
+          >
+            <Image
+              source={isSearchSelect ? icons.close : icons.search}
+              style={isSearchSelect ? style.closeIcon : style.searchIcon}
+              resizeMode={"contain"}
+            />
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={categoriesData}
           horizontal
@@ -134,9 +189,13 @@ const Home = () => {
         />
 
         <FlatList
-          data={articlesData?.articles}
+          data={articlesData?.articles?.filter((e) =>
+            e?.title?.toLowerCase()?.includes(serachText.toLowerCase())
+          )}
           showsVerticalScrollIndicator={false}
           renderItem={articlesRenderData}
+          refreshing={isRefresh}
+          onRefresh={onRefresh}
         />
       </View>
     </View>
@@ -153,7 +212,6 @@ const getGlobalStyles = (props) =>
       color: props.colors.black,
       fontWeight: "600",
       fontSize: fontSize(18),
-      margin: wp(4),
     },
     categoriesData: {
       borderWidth: 1,
@@ -161,6 +219,8 @@ const getGlobalStyles = (props) =>
       paddingHorizontal: wp(3),
       borderRadius: wp(3),
       borderColor: props.colors.primary,
+      alignItems: "center",
+      justifyContent: "center",
     },
     categoriesText: {
       fontSize: fontSize(18),
@@ -193,6 +253,7 @@ const getGlobalStyles = (props) =>
       height: "100%",
       width: wp(20),
       borderRadius: wp(2),
+      minHeight: hp(10),
     },
     autherContainer: {
       flexDirection: "row",
@@ -209,6 +270,14 @@ const getGlobalStyles = (props) =>
       fontSize: fontSize(16),
       color: props.colors.grey,
       fontWeight: "600",
+    },
+    searchIcon: {
+      height: wp(6),
+      width: wp(6),
+    },
+    closeIcon: {
+      height: wp(4),
+      width: wp(4),
     },
   });
 
