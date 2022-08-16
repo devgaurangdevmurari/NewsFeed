@@ -6,4 +6,9 @@ export default {
   topStoriesForYou: "Meilleures histoires pour vous",
   aticlesDetails: "Détails des articles",
   news: "Nouvelles",
+  all: "Toute",
+  android: "Android",
+  cricket: "criquet",
+  iPhone: "iPhone",
+  social: "sociale",
 };
