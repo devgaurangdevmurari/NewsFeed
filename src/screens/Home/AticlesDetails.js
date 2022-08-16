@@ -24,7 +24,7 @@ const AticlesDetails = ({ route }) => {
 
   return (
     <View style={style.container}>
-      <Header title={getText("aticlesDetails")} />
+      <Header isBack title={getText("aticlesDetails")} />
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={style.authorText}>{finalDisplayData?.author || ""}</Text>
         <Text style={style.authorText}>

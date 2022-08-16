@@ -20,7 +20,7 @@ import {
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { Header } from "../../components";
-import { hp, wp } from "../../helper/constants";
+import { hp, isIos, wp } from "../../helper/constants";
 import { getText } from "../../helper/globalFunction";
 import { fontSize } from "../../helper/utils";
 import { homeCategoriesData } from "../../helper/dataConstants";
@@ -150,16 +150,16 @@ const Home = () => {
           {isSearchSelect ? (
             <View style={{ flex: 1, marginRight: wp(4) }}>
               <TextInput
-                style={{
-                  borderWidth: 1,
-                  borderRadius: wp(2),
-                  fontSize: fontSize(18),
-                  paddingHorizontal: wp(2),
-                  height: hp(4),
-                }}
+                style={style.inputContainer}
                 placeholder={"Search Article"}
-                // value={serachText}
-                // onChangeText={(text) => setSerachText(text)}
+                placeholderTextColor={colors.grey}
+                value={serachText}
+                onChangeText={(text) => {
+                  setSerachText(text);
+                  if (text == "") {
+                    getNewsData("All");
+                  }
+                }}
               />
             </View>
           ) : (
@@ -170,6 +170,10 @@ const Home = () => {
           <TouchableOpacity
             onPress={() => {
               setIsSearchSelect(!isSearchSelect);
+              if (isSearchSelect) {
+                setSerachText("");
+                getNewsData("All");
+              }
             }}
           >
             <Image
@@ -274,10 +278,21 @@ const getGlobalStyles = (props) =>
     searchIcon: {
       height: wp(6),
       width: wp(6),
+      tintColor: props.colors.black,
     },
     closeIcon: {
       height: wp(4),
       width: wp(4),
+      tintColor: props.colors.black,
+    },
+    inputContainer: {
+      borderWidth: 1,
+      borderRadius: wp(2),
+      fontSize: fontSize(18),
+      paddingHorizontal: wp(2),
+      height: isIos ? hp(4) : hp(6),
+      borderColor: props.colors.black,
+      color: props.colors.black,
     },
   });
 

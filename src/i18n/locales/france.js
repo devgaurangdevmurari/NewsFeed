@@ -1,5 +1,5 @@
 export default {
-  home: "domicile",
+  home: "Nouvelles",
   settings: "Réglages",
   language: "Langue",
   theme: "Thème",
