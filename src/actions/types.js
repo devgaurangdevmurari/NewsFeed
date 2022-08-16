@@ -1,0 +1,5 @@
+//Data List
+export const GET_DATALIST = "GET_DATALIST";
+export const SET_CHANGE_THEME = "SET_CHANGE_THEME";
+export const SET_CHANGE_LANGUAGE = "SET_CHANGE_LANGUAGE";
+export const GET_ARTICLES_DATA = "GET_ARTICLES_DATA";
